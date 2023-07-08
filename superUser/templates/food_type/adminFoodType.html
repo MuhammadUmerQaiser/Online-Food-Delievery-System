@@ -1,0 +1,130 @@
+{% extends 'adminLayout.html' %} 
+{% block title %} Admin - Food Type {% endblock %} 
+{% block content %}
+
+<div class="main_content_iner">
+    <div class="container-fluid p-0">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <div class="white_card card_height_100 mb_30">
+            <div class="white_card_header">
+              <div class="box_header m-0">
+              </div>
+            </div>
+            <div class="white_card_body">
+              <div class="QA_section">
+                <div class="white_box_tittle list_header">
+                  <h4>Food Type</h4>
+                  <div class="box_right d-flex lms_block">
+                    <div class="serach_field_2">
+                      <div class="search_inner">
+                        <!-- <form Active="#">
+                          <div class="search_field">
+                            <input
+                              type="text"
+                              placeholder="Search content here..."
+                            />
+                          </div>
+                          <button type="submit">
+                            <i class="ti-search"></i>
+                          </button>
+                        </form> -->
+                      </div>
+                    </div>
+                    <div class="add_button ms-2">
+                      <button
+                        type="button"
+                        class="btn_1"
+                        data-toggle="modal" data-target="#exampleModal"
+                        >Create</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="QA_table mb_30">
+                  <table class="table lms_table_active">
+                    <thead>
+                      <tr>
+                        <th scope="col">S.No</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Created At</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if food_type %}
+                        {% for type in food_type %}
+                          <tr>
+                            <th scope="row">
+                              <a href="#" class="question_content">
+                                {{type.id}}
+                              </a>
+                            </th>
+                            <td>{{type.type}}</td>
+                            <td>{{ type.created_at|date:"Y-m-d" }}</td>
+                              <td>
+                                <form action="{% url 'deleteFoodType' %}" method="POST">
+                                  {% csrf_token %}
+                                  <input type="hidden" name="food_type_id" value="{{type.id}}">
+                                  <button type="submit" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                </form>
+                              </td>
+                          </tr>
+                        {% endfor %}
+                      {% else %}
+                        <p>No Data Available</p>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer_part">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="footer_iner text-center">
+            <p>
+              2020 © Influence - Designed by
+              <a href="#"> <i class="ti-heart"></i> </a
+              ><a href="#"> Dashboard</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Food Type</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{% url 'createFoodType' %}" method="POST">
+            <div class="modal-body">
+                {% csrf_token %}
+                <input type="text" placeholder="Food Type" class="form-control" name="type"  />
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

@@ -13,3 +13,15 @@ class Category(models.Model):
         
     def __str__(self):
         return self.name
+    
+
+class FoodType(models.Model):
+    type = models.CharField(max_length=255)
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True) 
+
+    class Meta:
+        db_table = 'food_types' 
+        
+    def __str__(self):
+        return self.name

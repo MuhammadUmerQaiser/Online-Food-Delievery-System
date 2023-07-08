@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from front.models import User
 from django.contrib import messages
 from django.utils.text import slugify
-from .models import Category
+from .models import Category, FoodType
 
 def indexAdmin(request):
     return render(request, 'adminIndex.html')
@@ -96,3 +96,43 @@ def deleteCategory(request):
             messages.error(request, str(e))
             return redirect('adminCategory')
     return redirect('adminCategory')
+
+
+def adminFoodType(request):
+    food_type = FoodType.objects.all()
+    return render(request, 'food_type/adminFoodType.html', {'food_type': food_type})
+
+def createFoodType(request):
+    if request.method == 'POST':
+        type = request.POST['type']
+
+        try:
+            category = FoodType.objects.create(
+                type=type,
+            )
+            messages.success(request, "Food Type created successfully!")
+            return redirect('adminFoodType')
+
+        except ValueError as e:
+            messages.error(request, str(e))
+            return redirect('adminFoodType')
+
+    return render(request, 'food_type/adminFoodType.html')
+
+
+def deleteFoodType(request):
+    if request.method == 'POST':
+        food_type_id = request.POST['food_type_id']
+        try:
+            food_type = FoodType.objects.filter(id=food_type_id).first()
+            if food_type:
+                food_type.delete()
+                messages.success(request, 'Food Type deleted successfully.')
+                return redirect('adminFoodType')
+            else:
+                messages.error(request, 'An error occured while deleting food type.')
+                return redirect('adminFoodType')
+        except ValueError as e:
+            messages.error(request, str(e))
+            return redirect('adminFoodType')
+    return redirect('adminFoodType')
