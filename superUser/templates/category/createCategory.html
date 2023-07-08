@@ -1,0 +1,73 @@
+{% extends 'adminLayout.html' %} 
+{% block title %} Admin - Create Category {% endblock %} 
+{% block content %}
+
+<div class="main_content_iner">
+    <div class="container-fluid p-0 sm_padding_15px">
+      <div class="row justify-content-center">
+        <div class="col-lg-12">
+          <div class="white_card card_height_100 mb_30">
+            <div class="white_card_header">
+              <div class="box_header m-0">
+                <div class="main-title">
+                  <h3 class="m-0">Create Category</h3>
+                </div>
+              </div>
+            </div>
+            <div class="white_card_body">
+              <div class="card-body">
+                <form action="{% url 'createCategory' %}" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div class="row mb-3">
+                    <div class="col-md-8">
+                      <label class="form-label" for="inputEmail4"
+                        >Name</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Category Name"
+                        name="name"
+                      />
+                    </div>
+                    <div class="col-md-8">
+                      <label class="form-label" for="inputPassword4"
+                        >Image</label
+                      >
+                      <input
+                        type="file"
+                        class="form-control"
+                        name="file"
+                      />
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    Create
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer_part">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="footer_iner text-center">
+            <p>
+              2020 © Influence - Designed by
+              <a href="#"> <i class="ti-heart"></i> </a
+              ><a href="#"> Dashboard</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
