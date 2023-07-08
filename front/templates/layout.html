@@ -28,6 +28,16 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     <link rel="stylesheet" href="/static/css/shop.css" type="text/css" />
     <link rel="stylesheet" type="text/css" href="/static/css/checkout.css">
 	  <link href="/static/css/easy-responsive-tabs.css" rel='stylesheet' type='text/css' />
+     <!-- CSS -->
+     <link
+     rel="stylesheet"
+     href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"
+   />
+   <!-- Default theme -->
+   <link
+     rel="stylesheet"
+     href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"
+   />
     <link
       rel="stylesheet"
       href="/static/css/owl.carousel.css"
@@ -683,6 +693,20 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
   <script src="/static/js/bootstrap.js"></script>
   <!-- js file -->
+  <!-- JavaScript -->
+  <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+  {% if messages %}
+  <script>
+    alertify.set("notifier", "position", "top-right");
+    {% for message in messages %}
+      {% if message.tags == 'error' %}
+        alertify.error('{{ message }}');
+      {% elif message.tags == 'success' %}
+        alertify.success('{{ message }}');
+      {% endif %}
+    {% endfor %}
+  </script>
+  {% endif %}
 </body>
 </html>
 

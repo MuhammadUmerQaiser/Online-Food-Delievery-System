@@ -64,13 +64,16 @@ def loginUser(request):
             if User.objects.filter(email=email).exists():
                 user = User.objects.filter(email=email).first()
                 if check_password(password, user.password):
+                    messages.success(request, 'Logged in successfully!')
                     request.session['name'] = user.name
                     request.session['id'] = user.id
                     request.session['email'] = user.email
                     request.session['contact'] = user.phone
                     request.session['role'] = user.role
-                    messages.success(request, 'Logged in successfully!')
-                    return redirect('authentication') 
+                    if user.role == "Admin":
+                        return redirect('indexAdmin') 
+                    else:
+                        return redirect('authentication') 
                 else:
                     messages.error(request,"Invalid password.")
                     return redirect('authentication')
