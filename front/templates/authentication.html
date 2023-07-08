@@ -217,46 +217,55 @@
           <div class="col-12 text-center align-self-center py-5">
             <div class="section pb-5 pt-5 pt-sm-2 text-center">
               <h6 class="mb-0 pb-3">
-                <span>Log In </span><span>Sign Up</span>
+                {% if not 'name' in request.session %}
+                <span>Log In </span>
+                {% endif %}
+                <span>Sign Up</span>
               </h6>
+              {% if not 'name' in request.session %}
               <input
                 class="checkbox"
                 type="checkbox"
                 id="reg-log"
                 name="reg-log"
               />
+              {% endif %}
               <label for="reg-log"></label>
               <div class="card-3d-wrap mx-auto">
                 <div class="card-3d-wrapper">
+                  {% if not 'name' in request.session %}
                   <div class="card-front">
                     <div class="center-wrap">
                       <div class="section text-center">
                         <h4 class="mb-4 pb-3">Log In</h4>
                         <form method="POST" action="{% url 'loginUser' %}">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <input
-                                  type="email"
-                                  class="form-style"
-                                  placeholder="Email"
-                                  name="email"
-                                  required
-                                />
-                                <i class="input-icon uil uil-at"></i>
-                              </div>
-                              <div class="form-group mt-2">
-                                <input
-                                  type="password"
-                                  class="form-style"
-                                  placeholder="Password"
-                                  name="password"
-                                  required
-                                />
-                                <i class="input-icon uil uil-lock-alt"></i>
-                              </div>
-                              <button type="submit" class="btn mt-4">
-                                Login
-                              </button>
+                          {% csrf_token %}
+                          <div class="form-group">
+                            <input
+                              type="email"
+                              class="form-style"
+                              placeholder="Email"
+                              name="email"
+                              required
+                            />
+                            <i class="input-icon uil uil-at"></i>
+                          </div>
+                          <div class="form-group mt-2">
+                            <input
+                              type="password"
+                              class="form-style"
+                              placeholder="Password"
+                              name="password"
+                              required
+                            />
+                            <i class="input-icon uil uil-lock-alt"></i>
+                          </div>
+                          <button type="submit" class="btn mt-4">Login</button>
+                          <!-- {% if 'name' in request.session %}
+                                <button type="submit" class="btn mt-4">
+                                  {{ request.session.name }}
+                                </button>
+                              {% endif %} -->
                         </form>
                         <!-- <p class="mb-0 mt-4 text-center">
                           <a href="https://www.web-leb.com/code" class="link"
@@ -266,7 +275,10 @@
                       </div>
                     </div>
                   </div>
-                  <div class="card-back">
+                  {% endif %}
+                  <div
+                    class="{% if 'name' in request.session %} card-front {% else %} card-back {% endif %}"
+                  >
                     <div class="center-wrap">
                       <div class="section text-center">
                         <h4 class="mb-3 pb-3">Sign Up</h4>
@@ -328,11 +340,17 @@
     </div>
     <!-- JavaScript -->
     <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    {% if messages %}
     <script>
-      {% for msg in messages %}
-        alertify.set("notifier", "position", "top-right");
-        alertify.success('{{msg}}');
+      alertify.set("notifier", "position", "top-right");
+      {% for message in messages %}
+        {% if message.tags == 'error' %}
+          alertify.error('{{ message }}');
+        {% elif message.tags == 'success' %}
+          alertify.success('{{ message }}');
+        {% endif %}
       {% endfor %}
     </script>
+    {% endif %}
   </body>
 </html>

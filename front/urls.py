@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('', views.index, name="index"),
@@ -9,8 +10,10 @@ urlpatterns = [
     path('checkout/', views.checkout, name="checkout"),
     path('about/', views.about, name="about"),
     path('contact/', views.contact, name="contact"),
+    # path('contact/', views.authenticated_only(views.contact), name="contact"),
     path('detail-product/', views.detail_product, name="detail-product"),
     path('auth/', views.authentication, name="authentication"),
     path('register/', views.registerUser, name="registerUser"),
     path('login/', views.loginUser, name="loginUser"),
+    path('logout/', views.logoutUser, name="logoutUser"),
 ]
