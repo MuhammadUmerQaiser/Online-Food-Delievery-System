@@ -44,7 +44,7 @@ def registerUser(request):
                 raise ValueError('User with this email already exists.')
             encrypted_password = make_password(password)
             
-            user = User(name=name, phone=contact, email=email, password=encrypted_password, role="User")
+            user = User(name=name, phone=contact, email=email, password=encrypted_password, role="Owner")
             user.save()
             
             messages.success(request, 'User registered successfully!')
@@ -72,6 +72,8 @@ def loginUser(request):
                     request.session['role'] = user.role
                     if user.role == "Admin":
                         return redirect('indexAdmin') 
+                    elif user.role == "Owner" :
+                        return redirect('indexUser') 
                     else:
                         return redirect('authentication') 
                 else:
