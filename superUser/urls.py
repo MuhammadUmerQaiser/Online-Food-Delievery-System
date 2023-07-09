@@ -12,4 +12,9 @@ urlpatterns = [
     path('food-type/', views.authenticated_only(views.adminFoodType), name="adminFoodType"),
     path('food-type/create/', views.authenticated_only(views.createFoodType), name="createFoodType"),
     path('food-type/delete/', views.authenticated_only(views.deleteFoodType), name="deleteFoodType"),
+    path('dish/', views.authenticated_only(views.adminDish), name="adminDish"),
+    path('dish/create/', views.authenticated_only(views.createDish), name="createDish"),
+    path('dish/delete/', views.authenticated_only(views.deleteDish), name="deleteDish"),
+    path('dish/edit/<int:id>/', views.authenticated_only(views.editDish), name="editDish"),
+    path('dish/update/<int:id>/', views.authenticated_only(views.updateDish), name="updateDish"),
 ]
