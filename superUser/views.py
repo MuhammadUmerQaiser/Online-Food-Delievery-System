@@ -14,8 +14,14 @@ def authenticated_only(view_func):
     @wraps(view_func)
     def wrapped_view(request, *args, **kwargs):
         if not 'name' in request.session:
+            messages.error(request, 'Please Login')
             return redirect('loginUser')  # Redirect to your login page
-        return view_func(request, *args, **kwargs)
+        if 'name' in request.session:
+            if request.session['role'] == "Admin":
+                return view_func(request, *args, **kwargs)
+            else:
+                messages.error(request, 'Access Denied')
+                return redirect('index')
     return wrapped_view
 
 def adminProfile(request):
