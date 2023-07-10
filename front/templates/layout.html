@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zxx">
   <head>
-    <title>{% block title %}{% endblock %}</title>
+    <title>HungryHub - {% block title %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="utf-8" />
     <meta
@@ -71,38 +71,62 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
       <header>
         <div class="row">
           <div class="col-md-3 top-info text-left mt-lg-4">
-            <h6>Need Help</h6>
+            <!-- <h6>Need Help</h6>
             <ul>
               <li><i class="fas fa-phone"></i> Call</li>
               <li class="number-phone mt-3">12345678099</li>
-            </ul>
+            </ul> -->
           </div>
           <div class="col-md-6 logo-w3layouts text-center">
             <h1 class="logo-w3layouts">
-              <a class="navbar-brand" href="{% url 'index' %}"> Goggles </a>
+              <a class="navbar-brand" href="{% url 'index' %}"> HungryHub </a>
             </h1>
           </div>
 
           <div class="col-md-3 top-info-cart text-right mt-lg-4">
             <ul class="cart-inner-info">
-              <li class="button-log">
-                <a class="btn-open" href="{% url 'authentication' %}">
-                  <span class="fa fa-user" aria-hidden="true"></span>
-                </a>
-              </li>
+              {% if 'role' in request.session %}
+                {% if request.session.role == "Admin" %}
+                  <li class="button-log">
+                    <a class="btn-open" href="{% url 'indexAdmin' %}">
+                      <span class="fa fa-user" aria-hidden="true"> {{request.session.name}}</span>
+                    </a>
+                  </li>
+                {% endif  %}
+                {% if request.session.role == "Owner" %}
+                  <li class="button-log">
+                    <a class="btn-open" href="{% url 'indexUser' %}">
+                      <span class="fa fa-user" aria-hidden="true"> {{request.session.name}}</span>
+                    </a>
+                  </li>
+                {% endif  %}
+                {% if request.session.role == "User" %}
+                  <li class="button-log">
+                    <a class="btn-open" href="#">
+                      <span class="fa fa-user" aria-hidden="true"> {{request.session.name}}</span>
+                    </a>
+                  </li>
+                {% endif  %}
+              {% else %}
+                <li class="button-log">
+                  <a class="btn-open" href="{% url 'authentication' %}">
+                    <span class="fa fa-user" aria-hidden="true"></span>
+                  </a>
+                </li>
+              {% endif  %}
               <li class="galssescart galssescart2 cart cart box_1">
                 <form action="#" method="post" class="last">
                   <input type="hidden" name="cmd" value="_cart" />
                   <input type="hidden" name="display" value="1" />
-                  <button
+                  <a
                     class="top_googles_cart"
-                    type="submit"
-                    name="submit"
-                    value=""
+                    href="{% url 'checkout' %}"
+                    style="text-decoration: none; color: inherit; text-align: center; background: none; letter-spacing: 2px; color: #454546; cursor: pointer; border: 1px solid #dde2e6;
+                    padding: 0.5em 1em;"
                   >
                     My Cart
                     <i class="fas fa-cart-arrow-down"></i>
-                  </button>
+                  </a>
                 </form>
               </li>
             </ul>
@@ -211,160 +235,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'about' %}">About</a>
               </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Features
-                </a>
-                <ul class="dropdown-menu mega-menu">
-                  <li>
-                    <div class="row">
-                      <div class="col-md-4 media-list span4 text-left">
-                        <h5 class="tittle-w3layouts-sub">Tittle goes here</h5>
-                        <ul>
-                          <li class="media-mini mt-3">
-                            <a href="{% url 'shop' %}">Designer Glasses</a>
-                          </li>
-                          <li class="">
-                            <a href="{% url 'shop' %}"> Ray-Ban</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Prescription Glasses</a>
-                          </li>
-                          <li class="mt-3">
-                            <h5>View more pages</h5>
-                          </li>
-                          <li class="mt-2">
-                            <a href="{% url 'about' %}">About</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'testimonial' %}">Customers</a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="col-md-4 media-list span4 text-left">
-                        <h5 class="tittle-w3layouts-sub">Tittle goes here</h5>
-                        <div class="media-mini mt-3">
-                          <a href="{% url 'shop' %}">
-                            <img src="/static/images/g2.jpg" class="img-fluid" alt="" />
-                          </a>
-                        </div>
-                      </div>
-                      <div class="col-md-4 media-list span4 text-left">
-                        <h5 class="tittle-w3layouts-sub">Tittle goes here</h5>
-                        <div class="media-mini mt-3">
-                          <a href="{% url 'shop' %}">
-                            <img src="/static/images/g3.jpg" class="img-fluid" alt="" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <hr />
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle"
-                  href="#"
-                  id="navbarDropdown1"
-                  role="button"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Shop
-                </a>
-                <ul class="dropdown-menu mega-menu">
-                  <li>
-                    <div class="row">
-                      <div class="col-md-4 media-list span4 text-left">
-                        <h5 class="tittle-w3layouts-sub">Tittle goes here</h5>
-                        <ul>
-                          <li class="media-mini mt-3">
-                            <a href="{% url 'shop' %}">Designer Glasses</a>
-                          </li>
-                          <li class="">
-                            <a href="{% url 'shop' %}"> Ray-Ban</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Prescription Glasses</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Rx Sunglasses</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Contact Lenses</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Multifocal Glasses</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Kids Glasses</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Lightweight Glasses</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Sports Glasses</a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="col-md-4 media-list span4 text-left">
-                        <h5 class="tittle-w3layouts-sub">Tittle goes here</h5>
-                        <ul>
-                          <li class="media-mini mt-3">
-                            <a href="{% url 'shop' %}">Brooks Brothers</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Persol</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Polo Ralph Lauren</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Prada</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Ray-Ban Jr</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Sferoflex</a>
-                          </li>
-                        </ul>
-                        <ul class="sub-in text-left">
-                          <li>
-                            <a href="{% url 'shop' %}">Polo Ralph Lauren</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Prada</a>
-                          </li>
-                          <li>
-                            <a href="{% url 'shop' %}">Ray-Ban Jr</a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div class="col-md-4 media-list span4 text-left">
-                        <h5 class="tittle-w3layouts-sub-nav">
-                          Tittle goes here
-                        </h5>
-                        <div class="media-mini mt-3">
-                          <a href="{% url 'shop' %}">
-                            <img src="/static/images/g1.jpg" class="img-fluid" alt="" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <hr />
-                  </li>
-                </ul>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'shop' %}">Shop</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{%  url 'contact' %}">Contact</a>
@@ -555,11 +427,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
       </div>
     </div>
   </div>
-  <script>
+  <!-- <script>
     $(document).ready(function () {
       $("#myModal").modal();
     });
-  </script>
+  </script> -->
   <!-- // modal -->
 
   <!--search jQuery-->
@@ -707,6 +579,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
     {% endfor %}
   </script>
   {% endif %}
+
+  {% block js %}{% endblock %}
 </body>
 </html>
 

@@ -11,7 +11,7 @@
                     <a href="{% url 'index' %}">Home</a>
                     <i>|</i>
                 </li>
-                <li>Single Page</li>
+                <li>{{dish.name}}</li>
             </ul>
         </div>
     </div>
@@ -30,14 +30,8 @@
                                 <div class="flexslider1">
             
                                     <ul class="slides">
-                                        <li data-thumb="/static/images/d2.jpg">
-                                            <div class="thumb-image"> <img src="/static/images/d2.jpg" data-imagezoom="true" class="img-fluid" alt=" "> </div>
-                                        </li>
-                                        <li data-thumb="/static/images/d1.jpg">
-                                            <div class="thumb-image"> <img src="/static/images/d1.jpg" data-imagezoom="true" class="img-fluid" alt=" "> </div>
-                                        </li>
-                                        <li data-thumb="/static/images/d3.jpg">
-                                            <div class="thumb-image"> <img src="/static/images/d3.jpg" data-imagezoom="true" class="img-fluid" alt=" "> </div>
+                                        <li data-thumb="{{dish.image.url}}">
+                                            <div class="thumb-image"> <img src="{{dish.image.url}}" data-imagezoom="true" class="img-fluid" alt=" "> </div>
                                         </li>
                                     </ul>
                                     <div class="clearfix"></div>
@@ -45,104 +39,35 @@
                             </div>
                         </div>
                         <div class="col-lg-8 single-right-left simpleCart_shelfItem">
-                            <h3>Irayz Butterfly Sunglasses  (Black)</h3>
-                            <p><span class="item_price">$650</span>
-                                <del>$1,199</del>
+                            <h3>{{dish.name}}  ({{dish.food_type.type}})</h3>
+                            <p><span class="item_price">${{dish.price}}</span>
                             </p>
-                            <div class="rating1">
-                                <ul class="stars">
-                                    <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a></li>
-                                </ul>
-                            </div>
+                            <p>Stock: <span class="item_price">{{dish.stock}}</span>
+                            </p>
                             <div class="description">
-                                <h5>Check delivery, payment options and charges at your location</h5>
-                                <form action="#" method="post">
-                                        <input class="form-control" type="text" name="Email" placeholder="Please enter..." required="">
-                                    <input type="submit" value="Check">
-                                </form>
+                                <h5>{{dish.description}}</h5>
                             </div>
-                            <div class="color-quality">
-                                <div class="color-quality-right">
-                                    <h5>Quality :</h5>
-                                    <select id="country1" onchange="change_country(this.value)" class="frm-field required sect">
-                                            <option value="null">5 Qty</option>
-                                            <option value="null">6 Qty</option> 
-                                            <option value="null">7 Qty</option>					
-                                            <option value="null">10 Qty</option>								
-                                        </select>
+                            {% if dish.stock != 0 %}
+                                <div id="input_div">
+                                    <input type="button" value="-" id="moins" onclick="minus()" class="btn btn-outline-primary">
+                                    <input type="text" value="1" id="count" class="btn btn-outline-primary font-secondary" disabled>
+                                    <input type="button" value="+" id="plus" data-stok="{{dish.stock}}" onclick="plus()" class="btn btn-outline-primary">
                                 </div>
-                            </div>
-                            <div class="occasional">
-                                <h5>Types :</h5>
-                                <div class="colr ert">
-                                    <label class="radio"><input type="radio" name="radio" checked=""><i></i> Irayz Butterfly(Black)</label>
-                                </div>
-                                <div class="colr">
-                                    <label class="radio"><input type="radio" name="radio"><i></i> Irayz Butterfly (Grey)</label>
-                                </div>
-                                <div class="colr">
-                                    <label class="radio"><input type="radio" name="radio"><i></i> Irayz Butterfly (white)</label>
-                                </div>
-                                <div class="clearfix"> </div>
-                            </div>
-                            <div class="occasion-cart">
+                                <div class="occasion-cart mt-2">
                                     <div class="googles single-item singlepage">
-                                            <form action="#" method="post">
-                                                <input type="hidden" name="cmd" value="_cart">
-                                                <input type="hidden" name="add" value="1">
-                                                <input type="hidden" name="googles_item" value="Farenheit">
-                                                <input type="hidden" name="amount" value="575.00">
-                                                <button type="submit" class="googles-cart pgoogles-cart">
-                                                    Add to Cart
-                                                </button>
-                                                
-                                            </form>
+                                        <button class="googles-cart pgoogles-cart add-to-cart" data-id-product="{{dish.id}}" data-quantity="1">Add to cart</button>
 
                                         </div>
                             </div>
-                            <ul class="footer-social text-left mt-lg-4 mt-3">
-                                    <li>Share On : </li>
-                                    <li class="mx-2">
-                                        <a href="#">
-                                            <span class="fab fa-facebook-f"></span>
-                                        </a>
-                                    </li>
-                                    <li class="mx-2">
-                                        <a href="#">
-                                            <span class="fab fa-twitter"></span>
-                                        </a>
-                                    </li>
-                                    <li class="mx-2">
-                                        <a href="#">
-                                            <span class="fab fa-google-plus-g"></span>
-                                        </a>
-                                    </li>
-                                    <li class="mx-2">
-                                        <a href="#">
-                                            <span class="fab fa-linkedin-in"></span>
-                                        </a>
-                                    </li>
-                                    <li class="mx-2">
-                                        <a href="#">
-                                            <span class="fas fa-rss"></span>
-                                        </a>
-                                    </li>
-                                    
-                                </ul>
-    
+                                
+                            {% endif %}
                         </div>
                         <div class="clearfix"> </div>
                         <!--/tabs-->
                         <div class="responsive_tabs">
                             <div id="horizontalTab">
                                 <ul class="resp-tabs-list">
-                                    <li>Description</li>
                                     <li>Reviews</li>
-                                    <li>Information</li>
                                 </ul>
                                 <div class="resp-tabs-container">
                                     <!--/tab_one-->
@@ -219,454 +144,44 @@
             <!--/slide-->
             <div class="slider-img mid-sec mt-lg-5 mt-2 px-lg-5 px-3">
                 <!--//banner-sec-->
-                <h3 class="tittle-w3layouts text-left my-lg-4 my-3">Featured Products</h3>
-                <div class="mid-slider">
-                    <div class="owl-carousel owl-theme row">
-                        <div class="item">
-                            <div class="gd-box-info text-center">
-                                <div class="product-men women_two bot-gd">
-                                    <div class="product-googles-info slide-img googles">
-                                        <div class="men-pro-item">
-                                            <div class="men-thumb-item">
-                                                <img src="/static/images/s5.jpg" class="img-fluid" alt="">
-                                                <div class="men-cart-pro">
-                                                    <div class="inner-men-cart-pro">
-                                                        <a href="{% url 'detail-product' %}" class="link-product-add-cart">Quick View</a>
-                                                    </div>
-                                                </div>
-                                                <span class="product-new-top">New</span>
-                                            </div>
-                                            <div class="item-info-product">
-
-                                                <div class="info-product-price">
-                                                    <div class="grid_meta">
-                                                        <div class="product_price">
-                                                            <h4>
-                                                                <a href="{% url 'detail-product' %}">Fastrack Aviator </a>
-                                                            </h4>
-                                                            <div class="grid-price mt-2">
-                                                                <span class="money ">$325.00</span>
-                                                            </div>
-                                                        </div>
-                                                        <ul class="stars">
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="googles single-item hvr-outline-out">
-                                                        <form action="#" method="post">
-                                                            <input type="hidden" name="cmd" value="_cart">
-                                                            <input type="hidden" name="add" value="1">
-                                                            <input type="hidden" name="googles_item" value="Fastrack Aviator">
-                                                            <input type="hidden" name="amount" value="325.00">
-                                                            <button type="submit" class="googles-cart pgoogles-cart">
-                                                                <i class="fas fa-cart-plus"></i>
-                                                            </button>
-                                                        </form>
-
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
+                <h3 class="tittle-w3layouts text-left my-lg-4 my-3">Discover the Freshest Flavors Await</h3>
+                <div class="left-ads-display col-lg-12">
+                    <div class="wrapper_top_shop">
+                        <div class="row">
+                            {% for dish in dishes %}
+                            <div class="col-md-3 product-men women_two">
+                              <div class="product-googles-info googles">
+                                <div class="men-pro-item">
+                                  <div class="men-thumb-item">
+                                    <img src="{{dish.image.url}}" class="img-fluid" alt="" />
+                                    <div class="men-cart-pro">
+                                      <div class="inner-men-cart-pro">
+                                        <a href="{% url 'detail-product' slug=dish.slug %}" class="link-product-add-cart"
+                                          >Quick View</a
+                                        >
+                                      </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="gd-box-info text-center">
-                                <div class="product-men women_two bot-gd">
-                                    <div class="product-googles-info slide-img googles">
-                                        <div class="men-pro-item">
-                                            <div class="men-thumb-item">
-                                                <img src="/static/images/s6.jpg" class="img-fluid" alt="">
-                                                <div class="men-cart-pro">
-                                                    <div class="inner-men-cart-pro">
-                                                        <a href="{% url 'detail-product' %}" class="link-product-add-cart">Quick View</a>
-                                                    </div>
-                                                </div>
-                                                <span class="product-new-top">New</span>
-                                            </div>
-                                            <div class="item-info-product">
-
-                                                <div class="info-product-price">
-                                                    <div class="grid_meta">
-                                                        <div class="product_price">
-                                                            <h4>
-                                                                <a href="{% url 'detail-product' %}">MARTIN Aviator </a>
-                                                            </h4>
-                                                            <div class="grid-price mt-2">
-                                                                <span class="money ">$425.00</span>
-                                                            </div>
-                                                        </div>
-                                                        <ul class="stars">
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="googles single-item hvr-outline-out">
-                                                        <form action="#" method="post">
-                                                            <input type="hidden" name="cmd" value="_cart">
-                                                            <input type="hidden" name="add" value="1">
-                                                            <input type="hidden" name="googles_item" value="MARTIN Aviator">
-                                                            <input type="hidden" name="amount" value="425.00">
-                                                            <button type="submit" class="googles-cart pgoogles-cart">
-                                                                <i class="fas fa-cart-plus"></i>
-                                                            </button>
-                                                        </form>
-
-                                                    </div>
-                                                </div>
-
-                                            </div>
+                                  </div>
+                                  <div class="item-info-product">
+                                    <div class="info-product-price">
+                                      <div class="grid_meta">
+                                        <div class="product_price">
+                                          <h4>
+                                            <a href="{% url 'detail-product' slug=dish.slug %}">{{dish.name}}</a>
+                                          </h4>
+                                          <div class="grid-price mt-2">
+                                            Price:<span class="money">${{dish.price}}</span><br />
+                                            Type: <span class="money">{{dish.food_type.type}}</span>
+                                          </div>
                                         </div>
+                                      </div>
                                     </div>
+                                    <div class="clearfix"></div>
+                                  </div>
                                 </div>
+                              </div>
                             </div>
-                        </div>
-                        <div class="item">
-                            <div class="gd-box-info text-center">
-                                <div class="product-men women_two bot-gd">
-                                    <div class="product-googles-info slide-img googles">
-                                        <div class="men-pro-item">
-                                            <div class="men-thumb-item">
-                                                <img src="/static/images/s7.jpg" class="img-fluid" alt="">
-                                                <div class="men-cart-pro">
-                                                    <div class="inner-men-cart-pro">
-                                                        <a href="{% url 'detail-product' %}" class="link-product-add-cart">Quick View</a>
-                                                    </div>
-                                                </div>
-                                                <span class="product-new-top">New</span>
-                                            </div>
-                                            <div class="item-info-product">
-
-                                                <div class="info-product-price">
-                                                    <div class="grid_meta">
-                                                        <div class="product_price">
-                                                            <h4>
-                                                                <a href="{% url 'detail-product' %}">Royal Son Aviator </a>
-                                                            </h4>
-                                                            <div class="grid-price mt-2">
-                                                                <span class="money ">$425.00</span>
-                                                            </div>
-                                                        </div>
-                                                        <ul class="stars">
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="googles single-item hvr-outline-out">
-                                                        <form action="#" method="post">
-                                                            <input type="hidden" name="cmd" value="_cart">
-                                                            <input type="hidden" name="add" value="1">
-                                                            <input type="hidden" name="googles_item" value="Royal Son Aviator">
-                                                            <input type="hidden" name="amount" value="425.00">
-                                                            <button type="submit" class="googles-cart pgoogles-cart">
-                                                                <i class="fas fa-cart-plus"></i>
-                                                            </button>
-                                                        </form>
-
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="gd-box-info text-center">
-                                <div class="product-men women_two bot-gd">
-                                    <div class="product-googles-info slide-img googles">
-                                        <div class="men-pro-item">
-                                            <div class="men-thumb-item">
-                                                <img src="/static/images/s8.jpg" class="img-fluid" alt="">
-                                                <div class="men-cart-pro">
-                                                    <div class="inner-men-cart-pro">
-                                                        <a href="{% url 'detail-product' %}" class="link-product-add-cart">Quick View</a>
-                                                    </div>
-                                                </div>
-                                                <span class="product-new-top">New</span>
-                                            </div>
-                                            <div class="item-info-product">
-
-                                                <div class="info-product-price">
-                                                    <div class="grid_meta">
-                                                        <div class="product_price">
-                                                            <h4>
-                                                                <a href="{% url 'detail-product' %}">Irayz Butterfly </a>
-                                                            </h4>
-                                                            <div class="grid-price mt-2">
-                                                                <span class="money ">$281.00</span>
-                                                            </div>
-                                                        </div>
-                                                        <ul class="stars">
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="googles single-item hvr-outline-out">
-                                                        <form action="#" method="post">
-                                                            <input type="hidden" name="cmd" value="_cart">
-                                                            <input type="hidden" name="add" value="1">
-                                                            <input type="hidden" name="googles_item" value="Irayz Butterfly">
-                                                            <input type="hidden" name="amount" value="281.00">
-                                                            <button type="submit" class="googles-cart pgoogles-cart">
-                                                                <i class="fas fa-cart-plus"></i>
-                                                            </button>
-                                                        </form>
-
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="gd-box-info text-center">
-                                <div class="product-men women_two bot-gd">
-                                    <div class="product-googles-info slide-img googles">
-                                        <div class="men-pro-item">
-                                            <div class="men-thumb-item">
-                                                <img src="/static/images/s9.jpg" class="img-fluid" alt="">
-                                                <div class="men-cart-pro">
-                                                    <div class="inner-men-cart-pro">
-                                                        <a href="{% url 'detail-product' %}" class="link-product-add-cart">Quick View</a>
-                                                    </div>
-                                                </div>
-                                                <span class="product-new-top">New</span>
-                                            </div>
-                                            <div class="item-info-product">
-
-                                                <div class="info-product-price">
-                                                    <div class="grid_meta">
-                                                        <div class="product_price">
-                                                            <h4>
-                                                                <a href="{% url 'detail-product' %}">Jerry Rectangular </a>
-                                                            </h4>
-                                                            <div class="grid-price mt-2">
-                                                                <span class="money ">$525.00</span>
-                                                            </div>
-                                                        </div>
-                                                        <ul class="stars">
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="googles single-item hvr-outline-out">
-                                                        <form action="#" method="post">
-                                                            <input type="hidden" name="cmd" value="_cart">
-                                                            <input type="hidden" name="add" value="1">
-                                                            <input type="hidden" name="googles_item" value="Jerry Rectangular ">
-                                                            <input type="hidden" name="amount" value="525.00">
-                                                            <button type="submit" class="googles-cart pgoogles-cart">
-                                                                <i class="fas fa-cart-plus"></i>
-                                                            </button>
-                                                        </form>
-
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="gd-box-info text-center">
-                                <div class="product-men women_two bot-gd">
-                                    <div class="product-googles-info slide-img googles">
-                                        <div class="men-pro-item">
-                                            <div class="men-thumb-item">
-                                                <img src="/static/images/s10.jpg" class="img-fluid" alt="">
-                                                <div class="men-cart-pro">
-                                                    <div class="inner-men-cart-pro">
-                                                        <a href="{% url 'detail-product' %}" class="link-product-add-cart">Quick View</a>
-                                                    </div>
-                                                </div>
-                                                <span class="product-new-top">New</span>
-                                            </div>
-                                            <div class="item-info-product">
-
-                                                <div class="info-product-price">
-                                                    <div class="grid_meta">
-                                                        <div class="product_price">
-                                                            <h4>
-                                                                <a href="{% url 'detail-product' %}">Herdy Wayfarer </a>
-                                                            </h4>
-                                                            <div class="grid-price mt-2">
-                                                                <span class="money ">$325.00</span>
-                                                            </div>
-                                                        </div>
-                                                        <ul class="stars">
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star-half-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-star-o" aria-hidden="true"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="googles single-item hvr-outline-out">
-                                                            <form action="#" method="post">
-                                                                <input type="hidden" name="cmd" value="_cart">
-                                                                <input type="hidden" name="add" value="1">
-                                                                <input type="hidden" name="googles_item" value="Royal Son Aviator">
-                                                                <input type="hidden" name="amount" value="425.00">
-                                                                <button type="submit" class="googles-cart pgoogles-cart">
-                                                                    <i class="fas fa-cart-plus"></i>
-                                                                </button>
-
-                                                                
-                                                            </form>
-
-                                                        </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                          {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -675,4 +190,69 @@
         </div>
 </section>
 
+{% endblock %}
+
+
+{% block js %}
+    <script>
+      var count = 1;
+      var countEl = document.getElementById("count");
+      function plus(){
+        let stok = $('#plus').attr('data-stok');
+        if(stok == 0){
+          count++;
+          countEl.value = count;
+          $('.add-to-cart').attr('data-quantity', count);
+        }else{
+          if(count < stok){
+            count++;
+            countEl.value = count;
+            $('.add-to-cart').attr('data-quantity', count);
+          }
+        }
+      }
+
+      function minus(){
+        if (count > 1) {
+          count--;
+          countEl.value = count;
+          $('.add-to-cart').attr('data-quantity', count);
+        }  
+      }
+
+      $(".add-to-cart").click(function(e) {
+            e.preventDefault();
+            let product_id = $(this).data("id-product");
+            let quantity = $(this).data("quantity");
+
+            $.ajax({
+                type: "POST",
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    product_id: product_id,
+                    quantity: quantity
+                },
+                url: "{% url 'addToCart' %}",
+                success: function(data) {
+                    $('#cartCount').text(data.cartCount);
+                    countEl.value = 1;
+                    count = 1;
+                },
+                statusCode: {
+                    200: function() {
+                        alertify.set("notifier", "position", "top-right");
+                        alertify.notify("Success Add To Cart", "success", 3000);
+                    },
+                    201: function() {
+                        alertify.set("notifier", "position", "top-right");
+                        alertify.notify("Success Updated Quantity To Cart", "success", 3000);
+                    },
+                    202: function() {
+                        alertify.set("notifier", "position", "top-right");
+                        alertify.notify("This Product Max Quantity To Cart", "error", 3000);
+                    }
+                }
+        });
+    });
+    </script>
 {% endblock %}
