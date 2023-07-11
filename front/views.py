@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from functools import wraps
 from django.contrib import auth, messages
 from django.contrib.auth import login, authenticate
-from .models import User
+from .models import User, Contact
 from superUser.models import Dish
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
@@ -23,6 +23,25 @@ def about(request):
     return render(request, 'about.html')
 
 def contact(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        subject = request.POST['subject']
+        description = request.POST['description']
+
+        try:
+            contact = Contact.objects.create(
+                name=name,
+                email=email,
+                subject=subject,
+                description=description
+            )
+            messages.success(request, "Your query has been submitted successfully!")
+            return redirect('contact')
+
+        except ValueError as e:
+            messages.error(request, str(e))
+            return redirect('contact')
     return render(request, 'contact.html')
 
 def testimonial(request):

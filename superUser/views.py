@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from functools import wraps
 from django.http import HttpResponse, JsonResponse
-from front.models import User
+from front.models import User, Contact
 from django.contrib import messages
 from django.utils.text import slugify
 from .models import Category, FoodType, Dish
@@ -256,4 +256,8 @@ def updateDish(request, id):
             return redirect('editDish', id=id)
 
     # Render the edit form with the existing dish data
-        return render(request, 'dish/editDish.html', {'categories': categories, 'food_types': food_types, 'dish': dish})
+    return render(request, 'dish/editDish.html', {'categories': categories, 'food_types': food_types, 'dish': dish})
+
+def adminContact(request):
+    contacts = Contact.objects.all()
+    return render(request, 'contact/adminContact.html', {'contacts': contacts})

@@ -17,4 +17,5 @@ urlpatterns = [
     path('dish/delete/', views.authenticated_only(views.deleteDish), name="deleteDish"),
     path('dish/edit/<int:id>/', views.authenticated_only(views.editDish), name="editDish"),
     path('dish/update/<int:id>/', views.authenticated_only(views.updateDish), name="updateDish"),
+    path('contacts/', views.authenticated_only(views.adminContact), name="adminContact"),
 ]
