@@ -120,12 +120,19 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                   <input type="hidden" name="display" value="1" />
                   <a
                     class="top_googles_cart"
-                    href="{% url 'checkout' %}"
+                    href="{% url 'carts' %}"
                     style="text-decoration: none; color: inherit; text-align: center; background: none; letter-spacing: 2px; color: #454546; cursor: pointer; border: 1px solid #dde2e6;
                     padding: 0.5em 1em;"
                   >
-                    My Cart
+                    {% if request.session.cart %}
+                      {% with cart_length=request.session.cart|length %}
+                        My Cart <span id="cartCount">({{ cart_length }})</span>
+                      {% endwith %}
+                      {% else %}
+                        My Cart (0)
+                      {% endif %}
                     <i class="fas fa-cart-arrow-down"></i>
+                    
                   </a>
                 </form>
               </li>

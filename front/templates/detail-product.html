@@ -39,29 +39,26 @@
                             </div>
                         </div>
                         <div class="col-lg-8 single-right-left simpleCart_shelfItem">
-                            <h3>{{dish.name}}  ({{dish.food_type.type}})</h3>
-                            <p><span class="item_price">${{dish.price}}</span>
-                            </p>
-                            <p>Stock: <span class="item_price">{{dish.stock}}</span>
-                            </p>
+                            <h3>{{dish.name}} ({{dish.food_type.type}})</h3>
+                            <p><span class="item_price">${{dish.price}}</span></p>
+                            <p>Stock: <span class="item_price">{{dish.stock}}</span></p>
                             <div class="description">
-                                <h5>{{dish.description}}</h5>
+                              <h5>{{dish.description}}</h5>
                             </div>
                             {% if dish.stock != 0 %}
-                                <div id="input_div">
-                                    <input type="button" value="-" id="moins" onclick="minus()" class="btn btn-outline-primary">
-                                    <input type="text" value="1" id="count" class="btn btn-outline-primary font-secondary" disabled>
-                                    <input type="button" value="+" id="plus" data-stok="{{dish.stock}}" onclick="plus()" class="btn btn-outline-primary">
-                                </div>
-                                <div class="occasion-cart mt-2">
-                                    <div class="googles single-item singlepage">
-                                        <button class="googles-cart pgoogles-cart add-to-cart" data-id-product="{{dish.id}}" data-quantity="1">Add to cart</button>
-
-                                        </div>
+                            <div id="input_div">
+                              <input type="button" value="-" id="moins" onclick="minus()" class="btn btn-outline-primary">
+                              <input type="text" value="1" id="count" class="btn btn-outline-primary font-secondary" disabled>
+                              <input type="button" value="+" id="plus" data-stok="{{dish.stock}}" onclick="plus()" class="btn btn-outline-primary">
                             </div>
-                                
+                            <div class="occasion-cart mt-2">
+                              <div class="googles single-item singlepage">
+                                <button class="googles-cart pgoogles-cart add-to-cart" data-id-product="{{dish.id}}" data-quantity="1">Add to cart</button>
+                              </div>
+                            </div>
                             {% endif %}
-                        </div>
+                          </div>
+                          
                         <div class="clearfix"> </div>
                         <!--/tabs-->
                         <div class="responsive_tabs">
@@ -194,65 +191,65 @@
 
 
 {% block js %}
-    <script>
-      var count = 1;
-      var countEl = document.getElementById("count");
-      function plus(){
-        let stok = $('#plus').attr('data-stok');
-        if(stok == 0){
+<script>
+    var count = 1;
+    var countEl = document.getElementById("count");
+  
+    function plus() {
+      let stok = $('#plus').attr('data-stok');
+      if (stok == 0) {
+        count++;
+        countEl.value = count;
+        $('.add-to-cart').attr('data-quantity', count);
+      } else {
+        if (count < stok) {
           count++;
           countEl.value = count;
           $('.add-to-cart').attr('data-quantity', count);
-        }else{
-          if(count < stok){
-            count++;
-            countEl.value = count;
-            $('.add-to-cart').attr('data-quantity', count);
-          }
         }
       }
-
-      function minus(){
-        if (count > 1) {
-          count--;
-          countEl.value = count;
-          $('.add-to-cart').attr('data-quantity', count);
-        }  
+    }
+  
+    function minus() {
+      if (count > 1) {
+        count--;
+        countEl.value = count;
+        $('.add-to-cart').attr('data-quantity', count);
       }
-
-      $(".add-to-cart").click(function(e) {
-            e.preventDefault();
-            let product_id = $(this).data("id-product");
-            let quantity = $(this).data("quantity");
-
-            $.ajax({
-                type: "POST",
-                data: {
-                    csrfmiddlewaretoken: "{{ csrf_token }}",
-                    product_id: product_id,
-                    quantity: quantity
-                },
-                url: "{% url 'addToCart' %}",
-                success: function(data) {
-                    $('#cartCount').text(data.cartCount);
-                    countEl.value = 1;
-                    count = 1;
-                },
-                statusCode: {
-                    200: function() {
-                        alertify.set("notifier", "position", "top-right");
-                        alertify.notify("Success Add To Cart", "success", 3000);
-                    },
-                    201: function() {
-                        alertify.set("notifier", "position", "top-right");
-                        alertify.notify("Success Updated Quantity To Cart", "success", 3000);
-                    },
-                    202: function() {
-                        alertify.set("notifier", "position", "top-right");
-                        alertify.notify("This Product Max Quantity To Cart", "error", 3000);
-                    }
-                }
-        });
+    }
+  
+    $(document).on("click", ".add-to-cart", function(e) {
+      e.preventDefault();
+      let product_id = $(this).data("id-product");
+      let quantity = $(this).data("quantity");
+  
+      $.ajax({
+        type: "POST",
+        data: {
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+          product_id: product_id,
+          quantity: quantity
+        },
+        url: "{% url 'addToCart' %}",
+        success: function(data) {
+          $('#cartCount').text(data.cartCount);
+          countEl.value = 1;
+          count = 1;
+          alertify.set("notifier", "position", "top-right");
+          if (data.code == 201) {
+            alertify.notify("Success Updated Quantity in Cart", "success", 3000);
+          } else if (data.code == 202) {
+            alertify.notify("This Product has reached the maximum quantity in Cart", "error", 3000);
+          } else {
+            alertify.notify("Success Added to Cart", "success", 3000);
+          }
+        },
+        error: function() {
+          alertify.set("notifier", "position", "top-right");
+          alertify.notify("An error occurred while adding to cart", "error", 3000);
+        }
+      });
     });
-    </script>
+  </script>
+  
 {% endblock %}

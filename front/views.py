@@ -31,6 +31,9 @@ def testimonial(request):
 def checkout(request):
     return render(request, 'checkout.html')
 
+def carts(request):
+    return render(request, 'carts.html')
+
 def detail_product(request, slug):
     dish = Dish.objects.filter(slug=slug).first()
     dishes = Dish.objects.order_by('-id')[:4]
@@ -125,33 +128,76 @@ def addToCart(request):
 
         cart = request.session.get('cart', {})
         product = Dish.objects.filter(id=product_id).first()
+        code = 0
 
-        if product_id in cart:
-            quantity_update = cart[product_id]['quantity'] + int(quantity)
+        if product:
+            if product_id in cart:
+                code = 201
+                quantity_update = cart[product_id]['quantity'] + int(quantity)
 
-            if quantity_update > product.stock:
-                return JsonResponse({
-                    'status': 'failed',
-                    'cartCount': len(cart),
-                    'code': 202
-                }, status=202)
+                if quantity_update > product.stock:
+                    code = 202
+                    return JsonResponse({
+                        'status': 'failed',
+                        'cartCount': len(cart),
+                        'code': 202
+                    }, status=202)
+                
+                cart[product_id]['quantity'] = quantity_update
+            else:
+                code = 200
+                cart[product_id] = {
+                    'product_id': product_id,
+                    'title': product.name,
+                    'quantity': int(quantity),
+                    'price': str(product.price),
+                    'product_stock': product.stock
+                }
 
-            cart[product_id]['quantity'] = quantity_update
-        else:
-            cart[product_id] = {
-                'product_id': product_id,
-                'title': product.name,
-                'quantity': int(quantity),
-                'price': str(product.price),
-                'product_stock': product.stock
-            }
+            request.session['cart'] = cart
 
-        request.session['cart'] = cart
-
-        return JsonResponse({
-            'status': 'success',
-            'cartCount': len(cart),
-            'code': 201 if product_id in cart else 200
-        }, status=201 if product_id in cart else 200)
+            return JsonResponse({
+                'status': 'success',
+                'cartCount': len(cart),
+                'code': code
+            }, status=201 if product_id in cart else 200)
 
     return JsonResponse({}, status=400)
+
+
+def updateCart(request):
+    if request.method == 'POST':
+        if request.POST['product_id'] and request.POST['quantity']:
+            product_id = request.POST['product_id']
+            quantity = int(request.POST['quantity'])
+            cart = request.session.get('cart', {})
+            cart[product_id]['quantity'] = quantity
+            # cart[product_id] = {'quantity': quantity}
+            request.session['cart'] = cart
+
+            total = 0
+            for details in cart.values():
+                price = float(details.get('price', 0))
+                quantity = int(details.get('quantity', 0))
+                total += price * quantity
+
+            return JsonResponse({'message': 'Success', 'total': total})
+
+
+def deleteCart(request):
+    if request.method == 'POST' and 'id' in request.POST:
+        product_id = request.POST['id']
+        cart = request.session.get('cart', {})
+        if product_id in cart:
+            del cart[product_id]
+            request.session['cart'] = cart
+
+        total = 0
+        for details in cart.values():
+            price = float(details.get('price', 0))
+            quantity = int(details.get('quantity', 0))
+            total += price * quantity
+
+        cart_count = len(cart)
+
+        return JsonResponse({'message': 'Success', 'total': total, 'cartCount': cart_count})

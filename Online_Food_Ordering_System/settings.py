@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'front',
     'superUser',
     'user',
+    'front.templatetags'
 ]
 
 MIDDLEWARE = [
