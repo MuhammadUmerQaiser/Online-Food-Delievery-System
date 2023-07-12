@@ -1,6 +1,7 @@
 {% extends 'layout.html' %}
-{% block title %} Checkout {% endblock %}
+{% block title %} Carts {% endblock %}
 {% block content %}
+{% load custom_tags %}
 
 <div class="banner_inner">
     <div class="services-breadcrumb">
@@ -11,7 +12,7 @@
                     <a href="{% url 'index' %}">Home</a>
                     <i>|</i>
                 </li>
-                <li>Checkout </li>
+                <li>Carts </li>
             </ul>
         </div>
     </div>
@@ -22,195 +23,128 @@
 <!--// header_top -->
 <!--checkout-->
 <section class="banner-bottom-wthreelayouts py-lg-5 py-3">
-<div class="container">
-    <div class="inner-sec-shop px-lg-4 px-3">
-        <h3 class="tittle-w3layouts my-lg-4 mt-3">Checkout </h3>
-        <div class="checkout-right">
-            <h4>Your shopping cart contains:
-                <span>3 Products</span>
-            </h4>
-            <table class="timetable_sub">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <table id="cart" class="table table-hover table-striped">
                 <thead>
                     <tr>
-                        <th>SL No.</th>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Product Name</th>
-
-                        <th>Price</th>
-                        <th>Remove</th>
+                        <th style="width:50%">Product</th>
+                        <th style="width:10%">Price</th>
+                        <th style="width:25%">Quantity</th>
+                        <th style="width:15%">Subtotal</th>
+                        {% if not request.resolver_match.url_name == 'checkout' %}
+                            <th style="width:5%">Action</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="rem1">
-                        <td class="invert">1</td>
-                        <td class="invert-image">
-                            <a href="">
-                                <img src="/static/images/s1.jpg" alt=" " class="img-responsive">
-                            </a>
-                        </td>
-                        <td class="invert">
-                            <div class="quantity">
-                                <div class="quantity-select">
-                                    <div class="entry value-minus">&nbsp;</div>
-                                    <div class="entry value">
-                                        <span>1</span>
-                                    </div>
-                                    <div class="entry value-plus active">&nbsp;</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="invert">Irayz Butterfly </td>
-
-                        <td class="invert">$281.00</td>
-                        <td class="invert">
-                            <div class="rem">
-                                <div class="close1"> </div>
-                            </div>
-
-                        </td>
-                    </tr>
-                    <tr class="rem2">
-                        <td class="invert">2</td>
-                        <td class="invert-image">
-                            <a href="">
-                                <img src="/static/images/s5.jpg" alt=" " class="img-responsive">
-                            </a>
-                        </td>
-                        <td class="invert">
-                            <div class="quantity">
-                                <div class="quantity-select">
-                                    <div class="entry value-minus">&nbsp;</div>
-                                    <div class="entry value">
-                                        <span>1</span>
-                                    </div>
-                                    <div class="entry value-plus active">&nbsp;</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="invert">Fastrack Aviator </td>
-
-                        <td class="invert">$325.00</td>
-                        <td class="invert">
-                            <div class="rem">
-                                <div class="close2"> </div>
-                            </div>
-
-                        </td>
-                    </tr>
-                    <tr class="rem3">
-                        <td class="invert">3</td>
-                        <td class="invert-image">
-                            <a href="">
-                                <img src="/static/images/s2.jpg" alt=" " class="img-responsive">
-                            </a>
-                        </td>
-                        <td class="invert">
-                            <div class="quantity">
-                                <div class="quantity-select">
-                                    <div class="entry value-minus">&nbsp;</div>
-                                    <div class="entry value">
-                                        <span>1</span>
-                                    </div>
-                                    <div class="entry value-plus active">&nbsp;</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="invert">Opium (Grey)</td>
-
-                        <td class="invert">$325.00</td>
-                        <td class="invert">
-                            <div class="rem">
-                                <div class="close3"> </div>
-                            </div>
-
-                        </td>
-                    </tr>
-
+                    {% if request.session.cart %}
+                        {% for id, details in request.session.cart.items %}
+                            {% with subtotal=details.price|floatmul:details.quantity %}
+                                <tr class="item-cart">
+                                    <td>
+                                        {{ details.title }}
+                                    </td>
+                                    <td>
+                                        ${{ details.price }}
+                                    </td>
+                                    <td>
+                                        {% if not request.resolver_match.url_name == 'checkout' %}
+                                            <div id="input_div" style="display: flex; gap: 10px;">
+                                                <input type="button" value="-" onclick="minus($(this))" class="btn btn-sm btn-outline-primary">
+                                                <input type="text" value="{{ details.quantity }}" id="count" data-id="{{ id }}" data-price="{{ details.price }}" class="count btn btn-sm btn-outline-primary font-secondary" disabled>
+                                                <input type="button" value="+" onclick="plus($(this))" data-stock="{{ details.product_stock }}" data-quantity="{{ details.quantity }}" class="btn btn-sm btn-outline-primary">
+                                            </div>
+                                        {% else %}
+                                            {{ details.quantity }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        $<span class="product-subtotal" data-subtotal="{{ subtotal }}">
+                                            {{ subtotal }}
+                                        </span>
+                                    </td>
+                                    {% if not request.resolver_match.url_name == 'checkout' %}
+                                        <td class="actions">
+                                            <button class="btn btn-danger btn-sm remove-from-cart" data-id="{{ id }}" onclick="deleteItem({{ id }}, $(this))">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    {% endif %}
+                                </tr>
+                                {% endwith %}
+                        {% endfor %}
+                    {% endif %}
                 </tbody>
+                <tfoot class="mt-5">
+                    <tr>
+                        <td>
+                        {% if not request.resolver_match.url_name == 'checkout' %}
+                            <a href="{% url 'index' %}" class="btn btn-outline-secondary">
+                                <span class="d-flex align-items-center gap-1">
+                                    <i class="bi bi-arrow-left"></i> Continue Shopping
+                                </span>
+                            </a>
+                        {% endif %}
+                        </td>
+                        <td colspan="2" class="hidden-xs"></td>
+                        <td class="hidden-xs">
+                            <strong>Total : $<span class="cart-total">{{total}}</span></strong>
+                        </td>
+                        <td class="hidden-xs">
+                        </td>
+                        {% if not request.resolver_match.url_name == 'checkout' %}
+                            {% if request.session.cart %}
+                                <td>
+                                    <a href="{% url 'checkout' %}" class="btn btn-primary">CheckOut</a>
+                                </td>
+                            {% endif %}
+                        {% endif %}
+                    </tr>
+                </tfoot>
             </table>
-        </div>
-        <div class="checkout-left row">
-            <div class="col-md-4 checkout-left-basket">
-                <h4>Continue to basket</h4>
-                <ul>
-                    <li>Product1
-                        <i>-</i>
-                        <span>$281.00 </span>
-                    </li>
-                    <li>Product2
-                        <i>-</i>
-                        <span>$325.00 </span>
-                    </li>
-                    <li>Product3
-                        <i>-</i>
-                        <span>$325.00 </span>
-                    </li>
-                    <li>Total Service Charges
-                        <i>-</i>
-                        <span>$55.00</span>
-                    </li>
-                    <li>Total
-                        <i>-</i>
-                        <span>$986.00</span>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-md-8 address_form">
-                <h4>Add a new Details</h4>
-                <form action="{% url 'payment' %}" method="post" class="creditly-card-form agileinfo_form">
-                    <section class="creditly-wrapper wrapper">
-                        <div class="information-wrapper">
-                            <div class="first-row form-group">
-                                <div class="controls">
-                                    <label class="control-label">Full name: </label>
-                                    <input class="billing-address-name form-control" type="text" name="name" placeholder="Full name">
-                                </div>
-                                <div class="card_number_grids">
-                                    <div class="card_number_grid_left">
-                                        <div class="controls">
-                                            <label class="control-label">Mobile number:</label>
-                                            <input class="form-control" type="text" placeholder="Mobile number">
-                                        </div>
-                                    </div>
-                                    <div class="card_number_grid_right">
-                                        <div class="controls">
-                                            <label class="control-label">Landmark: </label>
-                                            <input class="form-control" type="text" placeholder="Landmark">
-                                        </div>
-                                    </div>
-                                    <div class="clear"> </div>
-                                </div>
-                                <div class="controls">
-                                    <label class="control-label">Town/City: </label>
-                                    <input class="form-control" type="text" placeholder="Town/City">
-                                </div>
-                                <div class="controls">
-                                    <label class="control-label">Address type: </label>
-                                    <select class="form-control option-w3ls">
-                                        <option>Office</option>
-                                        <option>Home</option>
-                                        <option>Commercial</option>
 
-                                    </select>
-                                </div>
-                            </div>
-                            <button class="submit check_out">Delivery to this Address</button>
-                        </div>
-                    </section>
+
+            <div class="container py-4">
+                <form action="{% url 'payment' %}" method="post" class="require-validation" style="background:white;border-radius:15px;padding:20px">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" name="name" id="name" value="{{request.session.name}}" class="form-control bg-transparent" placeholder="Mike" disabled required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone number</label>
+                        <input type="text" name="phone" id="phone" value="{{request.session.contact}}" class="form-control bg-transparent" disabled placeholder="08122387xxxx" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" name="address" id="address" class="form-control bg-transparent" placeholder="3425 Stone Street" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="note">Note</label>
+                        <textarea name="note" id="note" cols="30" class="form-control bg-transparent" placeholder="Write instructions if any..." required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="note">Payment Method</label> <br />
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="method" value="COD" required>
+                            <label class="form-check-label">Cash On Delievery</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" value="Stripe" name="method" required>
+                            <label class="form-check-label">Stripe</label>
+                          </div>
+                    </div>
+                    <button type="submit" class="btn btn-success float-end">Order</button>
                 </form>
-                <div class="checkout-right-basket">
-                    <a href="{% url 'payment' %}">Make a Payment </a>
-                </div>
             </div>
-
-            <div class="clearfix"> </div>
-
+            
+            
         </div>
-
+        <div class="col-md-2"></div>
     </div>
-
-</div>
+    
 </section>
 
 {% endblock %}

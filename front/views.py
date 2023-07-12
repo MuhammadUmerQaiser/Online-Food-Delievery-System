@@ -3,10 +3,14 @@ from django.http import HttpResponse
 from functools import wraps
 from django.contrib import auth, messages
 from django.contrib.auth import login, authenticate
-from .models import User, Contact
+from .models import User, Contact, Order, OrderDetail, Payment
 from superUser.models import Dish
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
+from django.conf import settings
+import stripe
+import random
+from datetime import date
 
 def index(request):
     dishes = Dish.objects.order_by('-id')[:8]
@@ -17,7 +21,83 @@ def shop(request):
     return render(request, 'shop.html', {'dishes': dishes})
 
 def payment(request):
-    return render(request, 'payment.html')
+    order_code = f"{random.randint(100, 999)}-{date.today().strftime('%Y%m%d')}"
+
+    if 'cart' in request.session:
+        stripe.api_key = settings.STRIPE_SECRET
+        total = 0
+        quantity = 0
+        line_items = []
+        data = {}
+        for id, details in request.session['cart'].items():
+            total += float(details['price']) * int(details['quantity'])
+            quantity = details['quantity']
+            data[id] = {
+                'order_code': order_code,
+                'title': details['title'],
+                'price': details['price'],
+                'quantity': details['quantity'],
+            }
+
+            OrderDetail.objects.create(
+                order_code=order_code,
+                name=details['title'],
+                price=details['price'],
+                quantity=details['quantity'],
+                dish_id=id
+            )
+
+
+            line_items.append({
+                'price_data': {
+                    'currency': 'usd',
+                    'product_data': {
+                        'name': details['title'],
+                    },
+                    'unit_amount': details['price'] * 100,
+                },
+                'quantity': details['quantity'],
+            })
+
+        Order.objects.create(
+            order_code=order_code,
+            address=request.POST['address'],
+            note=request.POST['note'],
+            total=total,
+            user_id=request.session['id'],
+            status='Ordered'
+        )
+        method = 'COD'
+        status = 'Pending'
+        if request.POST['method'] == 'COD': 
+            method = 'COD'
+            status = 'Pending'
+        else:
+            method = 'Stripe'
+            status = 'Completed'
+
+        Payment.objects.create(
+            order_code=order_code,
+            method=method,
+            amount=total,
+            status=status
+        )
+
+        del request.session['cart']
+
+        if request.POST['method'] == 'Stripe':
+            checkout_session = stripe.checkout.Session.create(
+                line_items=line_items,
+                mode='payment',
+                success_url="{% url 'paymentSuccess' %}",
+                cancel_url="{% url 'paymentCancel' %}",
+            )
+            return redirect(checkout_session.url)
+
+        messages.success(request, "Item buy successfully")
+        return redirect('shop')
+
+    return redirect('shop')
 
 def about(request):
     return render(request, 'about.html')
@@ -48,7 +128,19 @@ def testimonial(request):
     return render(request, 'testimonial.html')
 
 def checkout(request):
-    return render(request, 'checkout.html')
+    cart = request.session.get('cart', {})
+    
+    if cart: 
+        total = 0
+        for details in cart.values():
+            price = float(details.get('price', 0))
+            quantity = int(details.get('quantity', 0))
+            total += price * quantity
+        
+        return render(request, 'checkout.html', {'total': total})
+    else:
+        messages.error(request, "Add items in your cart.")
+        return redirect('shop')  # Redirect to the shop page with a message
 
 def carts(request):
     return render(request, 'carts.html')
@@ -123,6 +215,7 @@ def authenticated_only(view_func):
     @wraps(view_func)
     def wrapped_view(request, *args, **kwargs):
         if not 'name' in request.session:
+            messages.error(request, 'Please Login')
             return redirect('loginUser')  # Redirect to your login page
         return view_func(request, *args, **kwargs)
     return wrapped_view
@@ -220,3 +313,10 @@ def deleteCart(request):
         cart_count = len(cart)
 
         return JsonResponse({'message': 'Success', 'total': total, 'cartCount': cart_count})
+    
+def paymentSuccess(request):
+    return render(request, 'about.html')
+
+
+def paymentCancel(request):
+    return render(request, 'index.html')

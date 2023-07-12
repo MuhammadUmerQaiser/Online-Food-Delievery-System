@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'front',
     'superUser',
     'user',
-    'front.templatetags'
+    'front.templatetags',
 ]
 
 MIDDLEWARE = [
@@ -138,3 +138,6 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STRIPE_KEY='pk_test_51NCju3HzZKzlo8aIlX0u69tfJ40lzXVUvDy75lSYJtV1HqVyQk5aSWhTYpiMdgeQY5AqWl57mZZNxZe9zF1h7Sig00y9rqIaeK'
+STRIPE_SECRET='sk_test_51NCju3HzZKzlo8aIDDxh161GpA46ZZdevnmQ51TQuYXhJD02CIKN5rjFAbgK5HhhM9udSTScnxEkCAZypVyLg5Re00DUl9OCSE'
