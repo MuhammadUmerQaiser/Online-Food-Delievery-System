@@ -13,3 +13,4 @@ def floatadd(value, arg):
         return float(value) + float(arg)
     except (ValueError, TypeError):
         return 0.0
+    

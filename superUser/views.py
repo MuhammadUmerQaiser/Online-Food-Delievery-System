@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from functools import wraps
 from django.http import HttpResponse, JsonResponse
-from front.models import User, Contact
+from front.models import User, Contact, Order, OrderDetail, Payment
 from django.contrib import messages
 from django.utils.text import slugify
 from .models import Category, FoodType, Dish
@@ -261,3 +261,41 @@ def updateDish(request, id):
 def adminContact(request):
     contacts = Contact.objects.all()
     return render(request, 'contact/adminContact.html', {'contacts': contacts})
+
+
+def adminOrder(request):
+    orders = Order.objects.all()
+    return render(request, 'order/orderIndex.html', {'orders': orders})
+
+def adminOrderDetail(request, code):
+    order = Order.objects.filter(order_code=code).first()
+    payment = Payment.objects.filter(order_code=code).first()
+    order_details = OrderDetail.objects.filter(order_code=code)
+    return render(request, 'order/orderDetail.html', {'order': order, 'payment': payment, 'order_details': order_details})
+
+def adminOrderUpdateStatus(request, code):
+    if request.method == 'POST':
+        order = Order.objects.filter(order_code=code).first()
+        payment = Payment.objects.filter(order_code=code).first()
+        order_details = OrderDetail.objects.filter(order_code=code)
+
+        if request.POST['status'] == 'Way':
+            for item in order_details:
+                product = Dish.objects.filter(name=item.name).first()
+                if product:
+                    updateStock = int(product.stock) - int(item.quantity)
+                    product.stock = updateStock
+                    product.save()
+        
+        if request.POST['status'] == 'Delievered':
+            payment.status = "Completed"
+            payment.save()
+
+        order.status = request.POST['status']
+        order.save()
+
+        messages.success(request, 'Status updated successfully.')
+        return redirect('adminOrderDetail', code)
+
+
+    return redirect('adminOrderDetail', code)

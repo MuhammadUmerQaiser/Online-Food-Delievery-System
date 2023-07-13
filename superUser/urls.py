@@ -18,4 +18,7 @@ urlpatterns = [
     path('dish/edit/<int:id>/', views.authenticated_only(views.editDish), name="editDish"),
     path('dish/update/<int:id>/', views.authenticated_only(views.updateDish), name="updateDish"),
     path('contacts/', views.authenticated_only(views.adminContact), name="adminContact"),
+    path('orders/', views.authenticated_only(views.adminOrder), name="adminOrder"),
+    path('order/<str:code>/', views.authenticated_only(views.adminOrderDetail), name="adminOrderDetail"),
+    path('order/update-status/<str:code>/', views.authenticated_only(views.adminOrderUpdateStatus), name="adminOrderUpdateStatus"),
 ]

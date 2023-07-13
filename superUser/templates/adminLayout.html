@@ -84,6 +84,7 @@
       id="colorSkinCSS"
     />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    {% block css %}{% endblock %}
   </head>
   <body class="crm_body_bg">
     <nav
@@ -126,6 +127,14 @@
               <img src="/static/img/menu-icon/6.svg" alt="" />
             </div>
             <span>Dishes</span>
+          </a>
+        </li>
+        <li class="">
+          <a href="{% url 'adminOrder' %}" aria-expanded="false">
+            <div class="icon_menu">
+              <img src="/static/img/menu-icon/6.svg" alt="" />
+            </div>
+            <span>Orders</span>
           </a>
         </li>
         <li class="">
@@ -476,6 +485,7 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block js %}{% endblock %}
     {% if messages %}
     <script>
       alertify.set("notifier", "position", "top-right");

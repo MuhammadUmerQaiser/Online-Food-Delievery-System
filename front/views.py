@@ -27,7 +27,6 @@ def payment(request):
         stripe.api_key = settings.STRIPE_SECRET
         total = 0
         quantity = 0
-        line_items = []
         data = {}
         for id, details in request.session['cart'].items():
             total += float(details['price']) * int(details['quantity'])
@@ -46,18 +45,6 @@ def payment(request):
                 quantity=details['quantity'],
                 dish_id=id
             )
-
-
-            line_items.append({
-                'price_data': {
-                    'currency': 'usd',
-                    'product_data': {
-                        'name': details['title'],
-                    },
-                    'unit_amount': details['price'] * 100,
-                },
-                'quantity': details['quantity'],
-            })
 
         Order.objects.create(
             order_code=order_code,
@@ -85,17 +72,8 @@ def payment(request):
 
         del request.session['cart']
 
-        if request.POST['method'] == 'Stripe':
-            checkout_session = stripe.checkout.Session.create(
-                line_items=line_items,
-                mode='payment',
-                success_url="{% url 'paymentSuccess' %}",
-                cancel_url="{% url 'paymentCancel' %}",
-            )
-            return redirect(checkout_session.url)
-
         messages.success(request, "Item buy successfully")
-        return redirect('shop')
+        return redirect('orderSuccess', order_code)
 
     return redirect('shop')
 
@@ -314,9 +292,19 @@ def deleteCart(request):
 
         return JsonResponse({'message': 'Success', 'total': total, 'cartCount': cart_count})
     
-def paymentSuccess(request):
-    return render(request, 'about.html')
+def orderSuccess(request, code):
+    return render(request, 'success.html', {'order_code': code})
 
 
-def paymentCancel(request):
-    return render(request, 'index.html')
+def checkOrder(request):
+    return render(request, 'check-order.html')
+
+def checkOrderStatus(request):
+    if request.method == 'POST':
+        order = Order.objects.filter(order_code=request.POST['order_code']).first()
+
+        if order:
+            order_details = OrderDetail.objects.filter(order_code=request.POST['order_code'])
+            return render(request, 'check-order.html', {'order': order, 'order_details': order_details})
+    return render(request, 'check-order.html')
+

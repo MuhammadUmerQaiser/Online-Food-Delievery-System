@@ -1,0 +1,137 @@
+{% extends 'layout.html' %}
+{% block title %} Check Order {% endblock %}
+{% block content %}
+{% load custom_tags %}
+<div class="banner_inner">
+    <div class="services-breadcrumb">
+        <div class="inner_breadcrumb">
+
+            <ul class="short">
+                <li>
+                    <a href="{% url 'index' %}">Home</a>
+                    <i>|</i>
+                </li>
+                <li>Check Order</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+<!--//banner -->
+</div>
+<!--// header_top -->
+<!-- top Products -->
+<section class="banner-bottom-wthreelayouts py-lg-5 py-3">
+<div class="container-fluid">
+
+    <div class="container py-3">
+        <h3 class="mb-4 font-primary"><b><u>Check Order</u></b></h3>
+        <form action="{% url 'checkOrderStatus' %}" method="post">
+          {% csrf_token %}
+          <div class="input-group mb-3">
+            <input type="text" name="order_code" class="form-control bg-transparent" placeholder="Input your order code b5K-xxxxx" aria-label="Recipient's username" aria-describedby="button-addon2" required>
+            <button class="btn btn-outline-primary" type="submit" id="button-addon2">Check</button>
+          </div>
+        </form>
+        <hr/>
+    </div>
+
+    {% if order %}
+        <div class="container py-3">
+            <div class="card bg-transparent border">
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-3 col-12">
+                            <table class="order-info">
+                                <tr>
+                                    <td><b>Status</b></td>
+                                    <td>&nbsp; : &nbsp;</td>
+                                    <td>
+                                        {% if order.status == 'Ordered' %}
+                                            <span class="badge bg-warning">Ordered</span>
+                                        {% elif order.status == 'Cooking' %}
+                                            <span class="badge bg-info">Cooking</span>
+                                        {% elif order.status == 'Way' %}
+                                            <span class="badge bg-primary">On The Way</span>
+                                        {% elif order.status == 'Delievered' %}
+                                            <span class="badge bg-success">Delievered</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Order Code</b></td>
+                                    <td>&nbsp; : &nbsp;</td>
+                                    <td><b><u>${{ order.order_code }}</u></b></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Total</b></td>
+                                    <td>&nbsp; : &nbsp;</td>
+                                    <td><b><u>${{ order.total }}</u></b></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Name</b></td>
+                                    <td>&nbsp; : &nbsp;</td>
+                                    <td>{{ order.user.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Phone</b></td>
+                                    <td>&nbsp; : &nbsp;</td>
+                                    <td>{{ order.user.phone }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Address</b></td>
+                                    <td>&nbsp; : &nbsp;</td>
+                                    <td>{{ order.address }}</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Note</b></td>
+                                    <td>&nbsp; : &nbsp;</td>
+                                    <td>{{ order.note }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-9 col-12">
+                            <h4>Order Detail</h4>
+                            <div class="table-responsive d-md-block d-sm-block d-none">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Title</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Sub Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in order_details %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ item.name }}</td>
+                                                <td>${{ item.price }}</td>
+                                                <td>{{ item.quantity }}</td>
+                                                <td>${{ item.price|floatmul:item.quantity }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-transparent mt-3 border">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-4">
+                            <a href="{% url 'index' %}" class="btn btn-sm btn-outline-secondary font-secondary"><span class="d-flex align-items-center gap-2"><i class="bi bi-arrow-left"></i> Home </span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+</section>
+
+{% endblock %}
